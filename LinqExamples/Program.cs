@@ -1,8 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinqExamples
 {
+
+	static class MyLinqExt
+    {
+
+		public static IEnumerable<T> MyWhere<T>(this IEnumerable<T> collection, Func<T, bool> cond)
+        {
+            Console.WriteLine("In MyWhere");
+			foreach(var element in collection)
+            {
+				if (cond(element))
+					yield return element;
+            }
+        }
+
+		public static IEnumerable<S> MySelect<T,S>(this IEnumerable<T> collection, Func<T,S> func)
+        {
+			foreach (var element in collection)
+				yield return func(element);
+        }
+    } 
 
     class Person
     {
@@ -30,10 +51,62 @@ namespace LinqExamples
 
     class Program
     {
+
+		
+
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+			//var l = new List<int> { 1,2,3,4,5,6,7,8,9};
+
+			//var q = l.Where(x => x > 4)
+			//	.Select(x => x * x);
+
+			//foreach(var i in q)
+			//	Console.WriteLine(i);
+
+			var persons = GetPersonData();
+			var courses = GetCourseData();
+
+			var q = persons.Where(x => MyFuncWehreAgeGreaterThan(x, 21));
+				//.Select(x => new { x.Name, x.Age });
+
+			var jq = persons.Join(
+				courses,
+				p => p.CourseId,
+				c => c.Id,
+				(p, c) => new { p.Name, CourseName = c.Name })
+				.MyWhere(x => x.CourseName == "AI");
+
+
+			foreach(var p in q)
+                Console.WriteLine(p);
+
+			//var l = q.ToList();
+            //Console.WriteLine(string.Join("\n", l));
+
         }
+
+		static bool MyFuncWehreAgeGreaterThan(Person p, int age)
+        {
+			return p.Age > age;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		/**************************************************************
