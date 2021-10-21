@@ -69,8 +69,8 @@ namespace LinqExamples
 			var persons = GetPersonData();
 			var courses = GetCourseData();
 
-			var q = persons.Where(x => MyFuncWehreAgeGreaterThan(x, 21));
-				//.Select(x => new { x.Name, x.Age });
+			var q = persons.Where(x => MyFuncWhereAgeEqualTo(x, 21))
+				.Select(x => new { x.Name, x.Age });
 
 			var jq = persons.Join(
 				courses,
@@ -88,9 +88,9 @@ namespace LinqExamples
 
         }
 
-		static bool MyFuncWehreAgeGreaterThan(Person p, int age)
+		static bool MyFuncWhereAgeEqualTo(Person p, int age)
         {
-			return p.Age > age;
+			return p.Age == age;
         }
 
 
